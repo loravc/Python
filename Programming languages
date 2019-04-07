@@ -1,0 +1,77 @@
+# import packages
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import datetime as dt
+
+# load data
+df1 = pd.read_csv(r"C:\Users\User\Downloads\sprachen.csv")
+
+
+def data_trans(df):
+    """
+    data transformation
+    """
+    try:
+        df["date"] = pd.to_datetime(df["date"], format="%Y/%m/%d")
+        df = df.set_index(df["date"])
+        del df["date"]
+        return df
+
+    except Exception as ex:
+        print("data error: ", ex)
+
+
+df = data_trans(df=df1)
+
+
+def plot_graph(dat):
+    """
+    plot programing language
+    """
+    try:
+        sns.set()
+        plt.figure(figsize=[16, 6])
+        pic = sns.lineplot(data=df, palette=("hls"))
+        pic.grid(False)
+        pic.lines[0].set_linestyle("-")
+        pic.lines[1].set_linestyle("-")
+        pic.lines[2].set_linestyle("-")
+        pic.lines[3].set_linestyle("-")
+        pic.lines[4].set_linestyle("-")
+
+        leg = plt.legend(loc=1, ncol=1, frameon=True ,
+                         title = "Language", shadow=True, framealpha = None) #bbox_to_anchor=(0.5, 1.1),
+        for line in leg.get_lines():
+            line.set_linewidth(4)
+            line.set_linestyle("-")
+
+        plt.figtext(.125, 0.93, "Programmers don't care about code during Christmas time", fontsize=20, ha='left')
+        plt.figtext(.125, 0.90,
+                    "\"The Google search interest for different programming languages drops at Christmas (since a large part probably does not have to work during the holiday season).\"",
+                    fontsize=9, ha='left')
+
+        plt.ylabel('relative Google search interest [%]')
+        plt.xlabel("")
+        plt.text(dt.datetime(2014, 1, 10), 5.5, "Source: https://trends.google.com/trends/", fontsize=6.5)
+
+        c = "darkred"
+        plt.axvline(dt.datetime(2014, 12, 24), linestyle=":", color =c, linewidth = 0.95)
+        plt.axvline(dt.datetime(2015, 12, 24), linestyle=":", color =c, linewidth = 0.95)
+        plt.axvline(dt.datetime(2016, 12, 24), linestyle=":", color =c, linewidth = 0.95)
+        plt.axvline(dt.datetime(2017, 12, 24), linestyle=":", color =c, linewidth = 0.95)
+        plt.axvline(dt.datetime(2018, 12, 24), linestyle=":", color =c, linewidth = 0.95)
+
+        plt.text(dt.datetime(2014, 12, 30), 100, "Christmas '14", fontsize=10)
+        plt.text(dt.datetime(2015, 12, 30), 100, "Christmas '15", fontsize=10)
+        plt.text(dt.datetime(2016, 12, 30), 100, "Christmas '16", fontsize=10)
+        plt.text(dt.datetime(2017, 12, 30), 100, "Christmas '17", fontsize=10)
+
+        plt.show()
+
+    except Exception as ex:
+        print("plot error: ",ex)
+
+
+plot_graph(dat=df)
+
